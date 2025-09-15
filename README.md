@@ -59,7 +59,7 @@ To set up and run the Ex-Tracker application, follow these steps:
 1.  **Clone the repository**:
 
     ```bash
-    git clone <repository-url>
+    git clone <https://github.com/Zabi-Sideqi/Ex-Tracker.git>
     cd Ex-tracker/backend
     ```
 
