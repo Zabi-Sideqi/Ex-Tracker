@@ -31,78 +31,71 @@ app.listen(PORT, () => {
  */
 
 // backend/server.js
-import 'dotenv/config';
-import express from 'express';
-import path from 'path';
-import cors from 'cors';
-import connectDB from './config/db.js';
-import authRoutes from './routes/authRoutes.js';
-import incomeRoutes from './routes/incomeRoutes.js';
-import expenseRoutes from './routes/expenseRoutes.js';
-import dashboardRoutes from './routes/dashboardRoutes.js';
+import 'dotenv/config'
+import express from 'express'
+import path from 'path'
+import cors from 'cors'
+import connectDB from './config/db.js'
+import authRoutes from './routes/authRoutes.js'
+import incomeRoutes from './routes/incomeRoutes.js'
+import expenseRoutes from './routes/expenseRoutes.js'
+import dashboardRoutes from './routes/dashboardRoutes.js'
 
-
-const app = express();
+const app = express()
 
 // Middleware: CORS (allow origin från .env eller fallback)
-const clientUrl = process.env.CLIENT_URL || 'http://localhost:5173';
+const clientUrl = process.env.CLIENT_URL || 'http://localhost:5173'
 app.use(
   cors({
-    origin: clientUrl,
+    origin: [clientUrl, 'http://localhost:5174'],
     methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
     allowedHeaders: ['Content-Type', 'Authorization'],
   })
-);
+)
 
 // Body parsers
-app.use(express.json()); // för application/json
-app.use(express.urlencoded({ extended: true })); // för x-www-form-urlencoded
+app.use(express.json()) // för application/json
+app.use(express.urlencoded({ extended: true })) // för x-www-form-urlencoded
 
 // (valfritt) Serve static files från en public-mapp, om du har en sådan
 // app.use(express.static(path.join(process.cwd(), 'public')));
 
 // Routes
-app.use('/api/v1/auth', authRoutes);
-app.use('/api/v1/income', incomeRoutes );
-app.use('/api/v1/expense', expenseRoutes );
-app.use('/api/v1/dashboard', dashboardRoutes );
-
+app.use('/api/v1/auth', authRoutes)
+app.use('/api/v1/income', incomeRoutes)
+app.use('/api/v1/expense', expenseRoutes)
+app.use('/api/v1/dashboard', dashboardRoutes)
 
 // Serve uploaded images statically
-app.use('/uploads', express.static(path.join(process.cwd(), 'uploads')));
+app.use('/uploads', express.static(path.join(process.cwd(), 'uploads')))
 
 // Enkel healthcheck
-app.get('/health', (req, res) => res.json({ status: 'ok' }));
+app.get('/health', (req, res) => res.json({ status: 'ok' }))
 
 // Global error handler (fångar async/oväntade fel)
 app.use((err, req, res, next) => {
-  console.error('Global error handler:', err);
-  res.status(err.status || 500).json({ message: err.message || 'Server error' });
-});
+  console.error('Global error handler:', err)
+  res.status(err.status || 500).json({ message: err.message || 'Server error' })
+})
 
 // Start server efter att DB är uppkopplad
-const PORT = process.env.PORT || 8000;
+const PORT = process.env.PORT || 8000
 
 const start = async () => {
   try {
-    await connectDB(); // anta att connectDB returnerar en promise
+    await connectDB() // anta att connectDB returnerar en promise
     app.listen(PORT, () => {
-      console.log(`Server running on port ${PORT} (client allowed: ${clientUrl})`);
-    });
+      console.log(
+        `Server running on port ${PORT} (client allowed: ${clientUrl})`
+      )
+    })
   } catch (err) {
-    console.error('Failed to start server:', err);
-    process.exit(1);
+    console.error('Failed to start server:', err)
+    process.exit(1)
   }
-};
+}
 
-start();
-
-
-
-
-
-
-
+start()
 
 /* 
 require("dotenv").config();
